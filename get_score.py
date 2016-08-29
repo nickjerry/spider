@@ -4,7 +4,7 @@ import re
 import urllib
 import urllib2
 
-semester= '20142' # 刷分的学期, 20102代表2010年第二学期
+semester= '20152' # 刷分的学期, 20102代表2010年第二学期
 jw_home = "http://jwas2.nju.edu.cn:8080/jiaowu/" # 教务网站首页地址
 jw_login= "http://jwas2.nju.edu.cn:8080/jiaowu/login.do" # 登录页面地址
 jw_query= 'http://jwas2.nju.edu.cn:8080/jiaowu/student/studentinfo/achievementinfo.do?method=searchTermList&termCode=' + semester
@@ -12,7 +12,7 @@ jw_query= 'http://jwas2.nju.edu.cn:8080/jiaowu/student/studentinfo/achievementin
 SESSION_ID = ''
 
 name="141242068"
-passwd="************"
+passwd=""
 
 def read_input():
     print 'STU_ID:'
@@ -49,7 +49,21 @@ def get_score(html):
     for item in items:
         print item[0], '\t', item[1]
 
+def parse_args():
+    import getopt, sys
+    opts, args = getopt.getopt(sys.argv[1:], "u:p:", ['user=', 'password='])
+    global name, passwd
+    for opt,arg in opts:
+        if opt in ('-u', '--user'):
+            name = arg
+        elif opt in ('-p', '--password'):
+            passwd = arg
+    if passwd == '':
+        sys.stderr.write('password not specified!\n')
+        exit(0)
+
 try:
+    parse_args()
     SESSION_ID = get_session_id()
     login()
     html = get_html()
